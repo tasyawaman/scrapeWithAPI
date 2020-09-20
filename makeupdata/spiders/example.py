@@ -9,20 +9,23 @@ class MakeupSpider(scrapy.Spider):
     # start_urls = ['http://example.com/']
 
     def start_requests(self):
-    	url = 'http://makeup-api.herokuapp.com/api/v1/products.json?'
+    	url = 'http://makeup-api.herokuapp.com/api/v1/products.json?brand=maybelline'
 
     	yield scrapy.http.Request(url)
 
     def parse(self, response):
     	jsonresponse = json.loads(response.text)
     	item = MakeupdataItem()
-    	first_only = jsonresponse[1]
-    	item['id'] = { 'value' : first_only['id']}
-    	item['name'] = {'value' : first_only['name'] }
-    	item['brand'] = {'value' : first_only['brand']}
-    	item['price'] = { 'value' : first_only['price']}
-    	item['description'] = {'value' : first_only['description']}
-    	yield item
+
+    	for index in jsonresponse:
+    		item['id'] = {'value' : index['id']}
+    		item['name'] = {'value' : index['name']}
+    		item['brand'] = {'value' : index['brand']}
+    		item['price'] = {'value' : index['price']}
+    		item['description'] = {'value' : index['description']}
+    		yield item
+
+
 
 
 
